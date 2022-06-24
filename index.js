@@ -31,11 +31,22 @@ async function connect() {
         res.json(activities);
     });
 
+
+    //  get api by id
+    app.get('/api/activities/:id', async (req, res) => {
+        const id = req.params.id;
+        const activity = await voluntaryCollection.findOne({ _id: ObjectId(id) });
+        res.json(activity);
+    }
+    );
+    
+
     // delete api
     app.delete('/api/activities/:id', async (req, res) => {
         const id = req.params.id;
-        const activity = await voluntaryCollection.findOneAndDelete({ _id: ObjectId(id) });
-        res.json(activity)
+        console.log(id);
+        // const activity = await voluntaryCollection.findOneAndDelete({ _id: ObjectId(id) });
+        // res.json(activity)
     });
 
 
