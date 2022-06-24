@@ -36,6 +36,14 @@ async function connect() {
         res.json(activity);
     });
 
+    // post api 
+    app.post('/api/activities', async (req, res) => {
+        const activity = req.body;
+        const result = await voluntaryCollection.insertOne(activity);
+        res.json(result);
+    });
+    
+
 
 }
 connect().catch(console.dir);
