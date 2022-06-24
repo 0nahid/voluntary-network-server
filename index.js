@@ -12,7 +12,7 @@ require('dotenv').config()
 
 // mongo connection
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.tcqve.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 async function connect() {
@@ -20,9 +20,16 @@ async function connect() {
         await client.connect();
         console.log("Connected to MongoDB");
     } catch (err) {
-        console.log(err.codeName,`& ${err.message}`);
+        console.log(err.codeName, `& ${err.message}`);
     }
+    // collection
+    const voluntaryCollection = client.db('voluntary').collection('activities');
 
+    // get api 
+    app.get('/api/activities', async (req, res) => {
+        const activities = await voluntaryCollection.find().toArray();
+        res.json(activities);
+    });
 
 
 }
