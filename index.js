@@ -1,11 +1,12 @@
 const express = require('express')
 const app = express()
-const port = process.env.port || 5500
+const cors = require('cors');
+
+const port = process.env.PORT || 5500;
 
 // Middleware
-app.use(express.json())
-const cors = require('cors')
-app.use(cors())
+app.use(cors());
+app.use(express.json());
 
 // dot env
 require('dotenv').config()
@@ -16,12 +17,9 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.tcqve.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 async function connect() {
-    try {
-        await client.connect();
-        console.log("Connected to MongoDB");
-    } catch (err) {
-        console.log(err.codeName, `& ${err.message}`);
-    }
+    await client.connect();
+    console.log('Connected to MongoDB');
+
     // collection
     const voluntaryCollection = client.db('voluntary').collection('activities');
 
@@ -31,22 +29,11 @@ async function connect() {
         res.json(activities);
     });
 
-
-    //  get api by id
+    // get api by id
     app.get('/api/activities/:id', async (req, res) => {
         const id = req.params.id;
         const activity = await voluntaryCollection.findOne({ _id: ObjectId(id) });
         res.json(activity);
-    }
-    );
-    
-
-    // delete api
-    app.delete('/api/activities/:id', async (req, res) => {
-        const id = req.params.id;
-        console.log(id);
-        // const activity = await voluntaryCollection.findOneAndDelete({ _id: ObjectId(id) });
-        // res.json(activity)
     });
 
 
