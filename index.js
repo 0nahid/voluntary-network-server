@@ -18,7 +18,7 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@clu
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 async function connect() {
     await client.connect();
-    console.log('Connected to MongoDB');
+    // console.log('Connected to MongoDB');
 
     // collection
     const voluntaryCollection = client.db('voluntary').collection('activities');
@@ -43,7 +43,13 @@ async function connect() {
         res.json(result);
     });
     
-
+    // delete api
+    app.delete('/api/activities/:id', async (req, res) => {
+        const id = req.params.id;
+        // console.log(id);
+        const result = await voluntaryCollection.deleteOne({ _id: ObjectId(id) });
+        res.json(result);
+    });
 
 }
 connect().catch(console.dir);
