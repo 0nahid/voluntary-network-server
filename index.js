@@ -31,6 +31,13 @@ async function connect() {
         res.json(activities);
     });
 
+    // delete api
+    app.delete('/api/activities/:id', async (req, res) => {
+        const id = req.params.id;
+        const activity = await voluntaryCollection.findOneAndDelete({ _id: ObjectId(id) });
+        res.json(activity)
+    });
+
 
 }
 connect().catch(console.dir);
